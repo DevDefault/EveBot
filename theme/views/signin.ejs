@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <%- include("components/head", { title: "Inicio" }) %>
+</head>
+
+<body>
+    <header>
+        <%- include("components/header") %> 
+    </header>
+
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <form id="formSignin" method="POST" action="/signin">
+                <div class="mb-2">
+                    <label for="username">Usuário</label>
+                    <input id="username" name="username" type="text" class="form-control form-control-sm"
+                    autocomplete="off">
+                </div>
+
+                <div class="mb-2">
+                    <label for="password">Senha</label>
+                    <input id="password" name="password" type="password" class="form-control form-control-sm"
+                    autocomplete="off">
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-sm btn-primary">Entrar</button>  
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <footer class="position-fixed bottom-0">
+            <%- include("components/footer") %> 
+        </footer>
+    </div>
+
+    <%- include("components/body") %> 
+
+    <script>
+        $(function() {
+            $("#formSignin").on("submit", function(event) {
+                event.preventDefault()
+
+                var body = new FormData(this)
+                $.ajax({
+                    type: $(this).attr("method"),
+                    url: $(this).attr("action"),
+                    data: body,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: (response) => {
+                        var json = JSON.parse(response)
+
+                        if (json.message == "success") {
+                            location.href = `${location.origin}/dashboard`
+                        } else {
+                            this.reset()
+
+                            $("#username").focus()
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>
