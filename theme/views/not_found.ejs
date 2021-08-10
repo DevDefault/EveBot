@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <%- include("components/head", { title: statusCode }) %>
+</head>
+
+<body>
+    <header>
+        <%- include("components/header") %> 
+    </header>
+
+    <div class="container">
+        <h1 class="text-center">Erro: <%= statusCode %> </h1> 
+
+        <a href="/" class="nav-link text-center">Ir para o inicio...</a>
+    </div>
+
+    <%- include("components/body") %> 
+    
+    <div class="d-flex justify-content-center">
+        <footer class="position-fixed bottom-0">
+            <%- include("components/footer") %> 
+        </footer>
+    </div>
+</body>
+
+</html>

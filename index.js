@@ -26,6 +26,11 @@ app.use(express.urlencoded({ extended: true }))
 /* Start Routes */
 app.use('/', home)
 
+app.get('*', function(req, res){
+    res.status(400).render("not_found", { statusCode: res.statusCode })
+});
+  
+
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })

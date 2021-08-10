@@ -10,15 +10,27 @@
         <%- include("components/header") %> 
     </header>
 
-    <div class="container d-flex justify-content-center">
-        <h1>Inicio</h1>
+    <div class="container">
+        <h1 class="text-center">Usuários</h1>
+     
+        <% if (users) { %>
+            <% users.forEach(function(user) { %>
+                <p class="text-center alert alert-success">
+                    <%= user.name %>
+                </p>
+            <% }) %>
+        <% } else { %> 
+            <p class="text-center alert alert-warning">Nenhum usuário encontrado.</p>
+        <% } %>  
     </div>
 
     <%- include("components/body") %> 
     
-    <footer>
-        <%- include("components/footer") %> 
-    </footer>
+    <div class="d-flex justify-content-center">
+        <footer class="position-fixed bottom-0">
+            <%- include("components/footer") %> 
+        </footer>
+    </div>
 </body>
 
 </html>
