@@ -1,10 +1,10 @@
-const express = require('express')
+const express = require("express")
 const router = express.Router()
 
 /* Models */
 const User = require("../models/user")
 
-router.get('/', async function (req, res) {
+router.get("/", async function (req, res) {
     req.session.destroy()
 
     global.isLogged = false
@@ -12,7 +12,7 @@ router.get('/', async function (req, res) {
     res.render("signin")
 })
 
-router.post('/signin', global.multer().none(), async function (req, res) {
+router.post("/signin", global.multer().none(), async function (req, res) {
     var username = req.body.username
     var password = req.body.password
 
@@ -33,7 +33,7 @@ router.post('/signin', global.multer().none(), async function (req, res) {
             }))
         } else {
             res.send(JSON.stringify({
-                message: "error"
+                message: "fail"
             }))
         }
     } else {
@@ -43,7 +43,7 @@ router.post('/signin', global.multer().none(), async function (req, res) {
     }
 })
 
-router.get('/signout', async function (req, res) {
+router.get("/signout", async function (req, res) {
     req.session.destroy()
 
     global.isLogged = false

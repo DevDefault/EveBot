@@ -7,49 +7,68 @@
 
 <body>
     <header>
-        <%- include("components/header") %> 
+        <%- include("components/header") %>
     </header>
 
     <div class="container">
         <div class="d-flex justify-content-center">
-            <form id="formSignin" method="POST" action="/signin">
-                <div class="mb-2">
-                    <label for="username">Usuário</label>
-                    <input id="username" name="username" type="text" class="form-control form-control-sm"
-                    autocomplete="off">
-                </div>
+            <div class="card">
+                <div class="card-body">
+                    <form id="formSignin" method="POST" action="/signin">
+                        <div class="mb-2">
+                            <label for="username">Usuário</label>
+                            <input id="username" name="username" type="text" class="form-control "
+                                autocomplete="off">
+                        </div>
 
-                <div class="mb-2">
-                    <label for="password">Senha</label>
-                    <input id="password" name="password" type="password" class="form-control form-control-sm"
-                    autocomplete="off">
-                </div>
+                        <div class="mb-2">
+                            <label for="password">Senha</label>
+                            <input id="password" name="password" type="password" class="form-control"
+                                autocomplete="off">
+                        </div>
 
-                <div>
-                    <button type="submit" class="btn btn-sm btn-primary">Entrar</button>  
+                        <div id="message" class="mb-2 alert alert-danger text-center" style="display:none;"></div>
+
+                        <div>
+                            <button type="submit" class="btn btn-primary">Entrar</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <div class="d-flex justify-content-center">
         <footer class="position-fixed bottom-0">
-            <%- include("components/footer") %> 
+            <%- include("components/footer") %>
         </footer>
     </div>
 
-    <%- include("components/body") %> 
+    <%- include("components/body") %>
 
     <script>
-        $(function() {
-            $("#formSignin").on("submit", function(event) {
+        $(function () {
+            $("#formSignin").on("submit", function (event) {
                 event.preventDefault()
 
-                var body = new FormData(this)
+                function showMessage(text, element) {
+                    element.reset()
+
+                    element.username.focus()
+
+                    $("#message").text(text)
+                    $("#message").fadeIn("slow")
+
+                    setTimeout(function() {
+                        $("#message").fadeOut("slow")
+                    }, 5000)
+                }
+
+                var formSignin = new FormData(this)
                 $.ajax({
                     type: $(this).attr("method"),
                     url: $(this).attr("action"),
-                    data: body,
+                    data: formSignin,
                     cache: false,
                     contentType: false,
                     processData: false,
@@ -58,10 +77,10 @@
 
                         if (json.message == "success") {
                             location.href = `${location.origin}/dashboard`
+                        } else if (json.message == "fail") {
+                            showMessage("Usuário inválido!", this)
                         } else {
-                            this.reset()
-
-                            $("#username").focus()
+                            showMessage("Preencha os campos!", this)
                         }
                     }
                 })
