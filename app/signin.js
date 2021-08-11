@@ -26,7 +26,6 @@ router.post(
     body("password").notEmpty(),
     async function (req, res) {
         const errors = validationResult(req)
-
         if (errors.isEmpty()) {
             var user = await User.findOne({
                 where: {

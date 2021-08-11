@@ -11,8 +11,9 @@ const session = require("express-session")
 /* Routes */
 const signin = require("./app/signin")
 const dashboard = require("./app/dashboard")
+const multer = require("multer")
 
-/* Set Global Config */
+/* Set Globals */
 global.year = (new Date()).getFullYear()
 
 /* Assets */

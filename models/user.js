@@ -25,6 +25,12 @@ const user = database.define('users', {
         autoIncrement: false,
         allowNull: false,
         primaryKey: false
+    },
+    privilege: {
+        type: Sequelize.INTEGER,
+        autoIncrement: false,
+        allowNull: false,
+        primaryKey: false
     }
 })
  
