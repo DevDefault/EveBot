@@ -2,137 +2,124 @@
 <html lang="pt-br">
 
 <head>
-    <%- include("components/head", { title: "Inicio" }) %>
+    <%- include("components/head", { title: "Login" }) %>
+        <link rel="stylesheet" href="assets/styles/signin.css">
+        <link rel="stylesheet" href="assets/styles/star.css">
+
+        <script src="https://kit.fontawesome.com/ce19ed932d.js" crossorigin="anonymous"></script>
+        <!-- Custom styles for this template -->
+        <link href="signin.css" rel="stylesheet">
 </head>
 
-<body>
-    <header>
-        <%- include("components/header") %>
-    </header>
+<body class="text-center">
+    <div class="login-container">
+        <div class="logo-container vertical-center">
+            <%- include("components/stars") %>
+        </div>
+        <div class="vertical-center text-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3 bg-white rounded">
+                        <form id="formSignin" method="POST" action="/signin" class=" p-3">
+                            <img class="mb-4" src="/assets/images/netsy.png" width="200">
+                            <h1 class="h3 mb-3 fw-normal">Iniciar Sessão</h1>
 
-    <div class="container">
-        <div class="d-flex justify-content-center">
-            <div class="card">
-                <div class="card-body">
-                    <form id="formSignin" method="POST" action="/signin">
-                        <div class="mb-2">
-                            <label for="username">Usuário</label>
-                            <input id="username" name="username" type="text" class="form-control " autocomplete="off">
+                            <div class="form-floating">
+                                <input id="username" name="username" type="text" class="form-control " autocomplete="off">
+                                <label for="username">Usuário</label>
+                            </div>
+                            <div class="form-floating">
+                                <input id="password" name="password" type="password" class="form-control" autocomplete="off">
+                                <label for="password">Senha</label>
+                            </div>
+
+                            <div class="checkbox mb-3">
+                                <label>
+                      <input type="checkbox" value="remember-me"> Lembrar-me
+                    </label>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary">Entrar</button>
+                            </div>
+                            <p class="mt-2 mb-3 text-muted">
+                                <a id="forgot-password" href="#">Esqueceu sua senha?</a>
+                            </p>
+                        </form>
+
+                    </div>
+
+                    <div id="message" class="container mb-4 mt-5">
+                        <div class="rectangle">
+                            <div class="notification-text">
+                                <span><i class="fa fa-check-circle" aria-hidden="true"></i></i>&nbsp;&nbsp;Logado com Sucesso2</span>
+                            </div>
                         </div>
-
-                        <div class="mb-2">
-                            <label for="password">Senha</label>
-                            <input id="password" name="password" type="password" class="form-control"
-                                autocomplete="off">
+                    </div>
+                    <div id="message" class="container mb-4 mt-5">
+                        <div class="rectangle">
+                            <div class="notification-text">
+                                <span><i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Credenciais inválidas.</span>
+                            </div>
                         </div>
+                    </div>
 
-                        <div id="message" class="mb-2 alert text-center" style="display:none;"></div>
-
-                        <div>
-                            <button type="submit" class="btn btn-primary">Entrar</button>
-                        </div>
-                    </form>
                 </div>
+                <!-- <div id="message" class="mb-2 alert text-center" style="display:none;"></div> -->
             </div>
         </div>
     </div>
-
-    <div class="d-flex justify-content-center">
-        <footer class="position-fixed bottom-0">
-            <%- include("components/footer") %>
-        </footer>
     </div>
+
 
     <%- include("components/body") %>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
+        <script>
+            const socket = io();
 
-        function showMessage(type, text, element) {
-            element.reset()
+            function showMessage(type, text, element) {
+                element.reset()
 
-            element.username.focus()
+                element.username.focus()
 
-            if (type == "success") {
-                $("#message").removeClass("alert-danger")
-                $("#message").addClass("alert-success")
-            } else {
-                $("#message").removeClass("alert-success")
-                $("#message").addClass("alert-danger")
-            }
-
-            $("#message").text(text)
-            $("#message").fadeIn("slow")
-
-            setTimeout(function () {
-                $("#message").fadeOut("slow")
-            }, 5000)
-        }
-
-        $("#formSignin").on("submit", function (event) {
-            event.preventDefault();
-
-            var form = {
-                username: this.username.value,
-                password: this.password.value
-            }
-
-            socket.emit("signin_request", form)
-            socket.on("signin_response", (message) => {
-                if (message == "success") {
-                    showMessage(message, "Logado com sucesso, você será redirecionado...", this)
-
-                    setTimeout(() => {
-                        location.href = `${location.origin}/dashboard`
-                    }, 5000)
+                if (type == "success") {
+                    $("#message").removeClass("alert-danger")
+                    $("#message").addClass("alert-success")
                 } else {
-                    showMessage(message, "Credenciais inválidas!", this)
-                }
-            })
-        })
-    </script>
-    <!-- <script>
-        $(function () {
-            $("#formSignin").on("submit", function (event) {
-                event.preventDefault()
-
-                function showMessage(text, element) {
-                    element.reset()
-
-                    element.username.focus()
-
-                    $("#message").text(text)
-                    $("#message").fadeIn("slow")
-
-                    setTimeout(function () {
-                        $("#message").fadeOut("slow")
-                    }, 5000)
+                    $("#message").removeClass("alert-success")
+                    $("#message").addClass("alert-danger")
                 }
 
-                var formSignin = new FormData(this)
-                $.ajax({
-                    type: $(this).attr("method"),
-                    url: $(this).attr("action"),
-                    data: formSignin,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: (response) => {
-                        var json = JSON.parse(response)
+                $("#message").text(text)
+                $("#message").fadeIn("slow")
 
-                        if (json.message == "success") {
+                setTimeout(function() {
+                    $("#message").fadeOut("slow")
+                }, 5000)
+            }
+
+            $("#formSignin").on("submit", function(event) {
+                event.preventDefault();
+
+                var form = {
+                    username: this.username.value,
+                    password: this.password.value
+                }
+
+                socket.emit("signin_request", form)
+                socket.on("signin_response", (message) => {
+                    if (message == "success") {
+                        showMessage(message, "Logado com sucesso, você será redirecionado...", this)
+
+                        setTimeout(() => {
                             location.href = `${location.origin}/dashboard`
-                        } else if (json.message == "fail") {
-                            showMessage("Usuário inválido!", this)
-                        } else {
-                            showMessage("Preencha os campos!", this)
-                        }
+                        }, 5000)
+                    } else {
+                        showMessage(message, "Credenciais inválidas!", this)
                     }
                 })
             })
-        })
-    </script> -->
+        </script>
+
 </body>
 
 </html>
