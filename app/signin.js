@@ -1,65 +1,35 @@
-const express = require("express")
-const router = express.Router()
-
-/* Form */
-const multer = require("multer")
-const {
-    body,
-    validationResult
-} = require('express-validator')
-
 /* Models */
 const User = require("../models/user")
 
-router.get("/", async function (req, res) {
-    req.session.destroy()
+module.exports = function(app, io) {
+    app.get("/", (req, res) => {
+        io.on('connection', (socket) => {
+            socket.on("signin_request", (form) => {
+                User.findOne({
+                    where: {
+                        username: form.username,
+                        password: form.password
+                    }
+                }).then((user) => {
+                    var message;
+                    if (user) {
+                        req.session.user = user
 
-    global.isLogged = false
+                        global.isLogged = true
 
-    res.render("signin")
-})
+                        message = "success"
+                    } else {
+                        message = "error"
+                    }
 
-router.post(
-    "/signin",
-    multer().none(),
-    body("username").notEmpty(),
-    body("password").notEmpty(),
-    async function (req, res) {
-        const errors = validationResult(req)
-        if (errors.isEmpty()) {
-            var user = await User.findOne({
-                where: {
-                    username: req.body.username,
-                    password: req.body.password
-                }
+                    socket.emit("signin_response", message)
+                })
             })
+            // socket.on('disconnect', () => {
+            //     console.log('user disconnected')
+            // })
+        })
 
-            if (user) {
-                req.session.user = user;
-                global.isLogged = true;
-
-                res.send(JSON.stringify({
-                    message: "success"
-                }))
-            } else {
-                res.send(JSON.stringify({
-                    message: "fail"
-                }))
-            }
-        } else {
-            res.send(JSON.stringify({
-                message: "error"
-            }))
-        }
-    }
-)
-
-router.get("/signout", async function (req, res) {
-    req.session.destroy()
-
-    global.isLogged = false
-
-    res.redirect("/")
-})
-
-module.exports = router
+        res.render("signin")
+    })
+}

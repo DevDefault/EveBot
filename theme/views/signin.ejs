@@ -3,12 +3,9 @@
 
 <head>
     <%- include("components/head", { title: "Login" }) %>
-        <link rel="stylesheet" href="assets/styles/signin.css">
-        <link rel="stylesheet" href="assets/styles/star.css">
+    <link rel="stylesheet" href="assets/styles/signin.css">
 
-        <script src="https://kit.fontawesome.com/ce19ed932d.js" crossorigin="anonymous"></script>
-        <!-- Custom styles for this template -->
-        <link href="signin.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/ce19ed932d.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="text-center">
@@ -35,90 +32,88 @@
 
                             <div class="checkbox mb-3">
                                 <label>
-                      <input type="checkbox" value="remember-me"> Lembrar-me
-                    </label>
-                            </div>
-                            <div>
-                                <button type="submit" class="btn btn-primary">Entrar</button>
-                            </div>
-                            <p class="mt-2 mb-3 text-muted">
-                                <a id="forgot-password" href="#">Esqueceu sua senha?</a>
-                            </p>
-                        </form>
-
-                    </div>
-
-                    <div id="message" class="container mb-4 mt-5">
-                        <div class="rectangle">
-                            <div class="notification-text">
-                                <span><i class="fa fa-check-circle" aria-hidden="true"></i></i>&nbsp;&nbsp;Logado com Sucesso2</span>
-                            </div>
+                                  <input type="checkbox" value="remember-me"> Lembrar-me
+                              </label>
+                          </div>
+                          <div>
+                            <button type="submit" class="btn btn-primary">Entrar</button>
                         </div>
-                    </div>
-                    <div id="message" class="container mb-4 mt-5">
-                        <div class="rectangle">
-                            <div class="notification-text">
-                                <span><i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Credenciais inválidas.</span>
-                            </div>
-                        </div>
-                    </div>
-
+                        <p class="mt-2 mb-3 text-muted">
+                            <a id="forgot-password" href="#">Esqueceu sua senha?</a>
+                        </p>
+                    </form>
                 </div>
-                <!-- <div id="message" class="mb-2 alert text-center" style="display:none;"></div> -->
+
+                <div id="message" class="container mb-4 mt-5">
+                    <div class="rectangle">
+                        <div class="notification-text">
+                            <span><i class="fa fa-check-circle" aria-hidden="true"></i></i>&nbsp;&nbsp;Logado com Sucesso2</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="message" class="container mb-4 mt-5">
+                    <div class="rectangle">
+                        <div class="notification-text">
+                            <span><i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Credenciais inválidas.</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+            <!-- <div id="message" class="mb-2 alert text-center" style="display:none;"></div> -->
         </div>
     </div>
-    </div>
+</div>
 
 
-    <%- include("components/body") %>
+<%- include("components/body") %>
 
-        <script>
-            const socket = io();
+<script>
+    const socket = io();
 
-            function showMessage(type, text, element) {
-                element.reset()
+    function showMessage(type, text, element) {
+        element.reset()
 
-                element.username.focus()
+        element.username.focus()
 
-                if (type == "success") {
-                    $("#message").removeClass("alert-danger")
-                    $("#message").addClass("alert-success")
-                } else {
-                    $("#message").removeClass("alert-success")
-                    $("#message").addClass("alert-danger")
-                }
+        if (type == "success") {
+            $("#message").removeClass("alert-danger")
+            $("#message").addClass("alert-success")
+        } else {
+            $("#message").removeClass("alert-success")
+            $("#message").addClass("alert-danger")
+        }
 
-                $("#message").text(text)
-                $("#message").fadeIn("slow")
+        $("#message").text(text)
+        $("#message").fadeIn("slow")
 
-                setTimeout(function() {
-                    $("#message").fadeOut("slow")
+        setTimeout(function() {
+            $("#message").fadeOut("slow")
+        }, 5000)
+    }
+
+    $("#formSignin").on("submit", function(event) {
+        event.preventDefault();
+
+        var form = {
+            username: this.username.value,
+            password: this.password.value
+        }
+
+        socket.emit("signin_request", form)
+        socket.on("signin_response", (message) => {
+            if (message == "success") {
+                showMessage(message, "Logado com sucesso, você será redirecionado...", this)
+
+                setTimeout(() => {
+                    location.href = `${location.origin}/dashboard`
                 }, 5000)
+            } else {
+                showMessage(message, "Credenciais inválidas!", this)
             }
-
-            $("#formSignin").on("submit", function(event) {
-                event.preventDefault();
-
-                var form = {
-                    username: this.username.value,
-                    password: this.password.value
-                }
-
-                socket.emit("signin_request", form)
-                socket.on("signin_response", (message) => {
-                    if (message == "success") {
-                        showMessage(message, "Logado com sucesso, você será redirecionado...", this)
-
-                        setTimeout(() => {
-                            location.href = `${location.origin}/dashboard`
-                        }, 5000)
-                    } else {
-                        showMessage(message, "Credenciais inválidas!", this)
-                    }
-                })
-            })
-        </script>
+        })
+    })
+</script>
 
 </body>
 
