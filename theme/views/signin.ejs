@@ -32,7 +32,7 @@
 
                             <div class="checkbox mb-3">
                                 <label>
-                                  <input type="checkbox" value="remember-me"> Lembrar-me
+                                  <input id="rememberMe" type="checkbox"> Lembrar-me
                               </label>
                           </div>
                           <div>
@@ -44,9 +44,14 @@
                     </form>
                 </div>
 
-                <div id="message" class="container mb-4 mt-5" style="display: none;"></div>
+                <div id="message" class="container mb-4 mt-5" style="display: none;">
+                    <div class="rectangle">
+                        <div class="notification-text">
+                            <span id="message-content"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- <div id="message" class="mb-2 alert text-center" style="display:none;"></div> -->
         </div>
     </div>
 </div>
@@ -56,44 +61,6 @@
 <script>
     const socket = io();
 
-    function showMessage(type, element) {
-        element.reset()
-
-        element.username.focus()
-
-        if (type == "success") {
-            $("#message").html(`
-                <div class="rectangle">
-                    <div class="notification-text">
-                        <span><i class="fa fa-check-circle" aria-hidden="true"></i></i>&nbsp;&nbsp;Logado com Sucesso.</span>
-                    </div>
-                </div>
-            `)
-        } else if(type == "error") {
-            $("#message").html(`
-                <div class="rectangle">
-                    <div class="notification-text">
-                        <span><i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Credenciais inválidas.</span>
-                    </div>
-                </div>
-            `)
-        } else {
-            $("#message").html(`
-                <div class="rectangle">
-                    <div class="notification-text">
-                        <span><i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Preencha os campos!</span>
-                    </div>
-                </div>
-            `)
-        }
-
-        $("#message").fadeIn("slow")
-
-        setTimeout(function() {
-            $("#message").fadeOut("slow")
-        }, 5000)
-    }
-
     $("#formSignin").on("submit", function(event) {
         event.preventDefault();
 
@@ -102,8 +69,8 @@
             password: this.password.value
         }
 
-        socket.emit("signin_request", form)
-        socket.on("signin_response", (message) => {
+        socket.emit("signin_send", form)
+        socket.on("signin_receive", (message) => {
             if (message == "success") {
                 showMessage(message, this)
 
@@ -114,6 +81,36 @@
                 showMessage(message,this)
             }
         })
+    })
+
+    function showMessage(type, form) {
+        form.reset()
+
+        form.username.focus()
+
+        if (type == "success") {
+            $("#message-content").html(`
+                <i class="fa fa-check-circle" aria-hidden="true"></i></i>&nbsp;&nbsp;Logado com Sucesso.</span> 
+            `)
+        } else if(type == "error") {
+            $("#message-content").html(`
+                <i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Credenciais inválidas.
+            `)
+        } else {
+            $("#message-content").html(`
+                <i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Preencha os campos!
+            `)
+        }
+
+        $("#message").fadeIn("slow")
+
+        setTimeout(function() {
+            $("#message").fadeOut("slow")
+        }, 5000)
+    }
+
+    $("#rememberMe").on("change", function(event) {
+        console.log(this.value)
     })
 </script>
 

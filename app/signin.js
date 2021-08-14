@@ -4,7 +4,7 @@ const User = require("../models/user")
 module.exports = function(app, io) {
     app.get("/", (req, res) => {
         io.on('connection', (socket) => {
-            socket.on("signin_request", (form) => {
+            socket.on("signin_send", (form) => {
                 var message;
 
                 if (form.username != "" && form.password != "") {
@@ -23,18 +23,19 @@ module.exports = function(app, io) {
                         } else {
                             message = "error"
                         }
-
-                        socket.emit("signin_response", message)
+                        
+                        socket.emit("signin_receive", message)
                     })
                 } else {
                     message = "empty"
-                    socket.emit("signin_response", message)
+                    
+                    socket.emit("signin_receive", message)
                 }
             })
-            
-            // socket.on('disconnect', () => {
-            //     console.log('user disconnected')
-            // })
+
+            socket.on('disconnect', () => {
+                console.log('user disconnected')
+            })
         })
 
         res.render("signin")
