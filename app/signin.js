@@ -5,26 +5,33 @@ module.exports = function(app, io) {
     app.get("/", (req, res) => {
         io.on('connection', (socket) => {
             socket.on("signin_request", (form) => {
-                User.findOne({
-                    where: {
-                        username: form.username,
-                        password: form.password
-                    }
-                }).then((user) => {
-                    var message;
-                    if (user) {
-                        req.session.user = user
+                var message;
 
-                        global.isLogged = true
+                if (form.username != "" && form.password != "") {
+                    User.findOne({
+                        where: {
+                            username: form.username,
+                            password: form.password
+                        }
+                    }).then((user) => {
+                        if (user) {
+                            req.session.user = user
 
-                        message = "success"
-                    } else {
-                        message = "error"
-                    }
+                            global.isLogged = true
 
+                            message = "success"
+                        } else {
+                            message = "error"
+                        }
+
+                        socket.emit("signin_response", message)
+                    })
+                } else {
+                    message = "empty"
                     socket.emit("signin_response", message)
-                })
+                }
             })
+            
             // socket.on('disconnect', () => {
             //     console.log('user disconnected')
             // })
