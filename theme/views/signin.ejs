@@ -37,6 +37,7 @@
                           </div>
                           <div>
                             <button type="submit" class="btn btn-primary">Entrar</button>
+<<<<<<< HEAD
                         </div>
                         <p class="mt-2 mb-3 text-muted">
                             <a id="forgot-password" href="#">Esqueceu sua senha?</a>
@@ -59,11 +60,22 @@
                     </div>
                 </div>
 
+=======
+                        </div>
+                        <p class="mt-2 mb-3 text-muted">
+                            <a id="forgot-password" href="#">Esqueceu sua senha?</a>
+                        </p>
+                    </form>
+                </div>
+
+                <div id="message" class="container mb-4 mt-5" style="display: none;"></div>
+>>>>>>> 39aee3551220e544014c9c854e705a02ed6cb4bf
             </div>
             <!-- <div id="message" class="mb-2 alert text-center" style="display:none;"></div> -->
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 
 
 <%- include("components/body") %>
@@ -87,6 +99,47 @@
         $("#message").text(text)
         $("#message").fadeIn("slow")
 
+=======
+
+<%- include("components/body") %>
+
+<script>
+    const socket = io();
+
+    function showMessage(type, element) {
+        element.reset()
+
+        element.username.focus()
+
+        if (type == "success") {
+            $("#message").html(`
+                <div class="rectangle">
+                    <div class="notification-text">
+                        <span><i class="fa fa-check-circle" aria-hidden="true"></i></i>&nbsp;&nbsp;Logado com Sucesso.</span>
+                    </div>
+                </div>
+            `)
+        } else if(type == "error") {
+            $("#message").html(`
+                <div class="rectangle">
+                    <div class="notification-text">
+                        <span><i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Credenciais inválidas.</span>
+                    </div>
+                </div>
+            `)
+        } else {
+            $("#message").html(`
+                <div class="rectangle">
+                    <div class="notification-text">
+                        <span><i class="fa fa-info-circle text-white" aria-hidden="true"></i>&nbsp;&nbsp;Preencha os campos!</span>
+                    </div>
+                </div>
+            `)
+        }
+
+        $("#message").fadeIn("slow")
+
+>>>>>>> 39aee3551220e544014c9c854e705a02ed6cb4bf
         setTimeout(function() {
             $("#message").fadeOut("slow")
         }, 5000)
@@ -103,6 +156,7 @@
         socket.emit("signin_request", form)
         socket.on("signin_response", (message) => {
             if (message == "success") {
+<<<<<<< HEAD
                 showMessage(message, "Logado com sucesso, você será redirecionado...", this)
 
                 setTimeout(() => {
@@ -110,6 +164,15 @@
                 }, 5000)
             } else {
                 showMessage(message, "Credenciais inválidas!", this)
+=======
+                showMessage(message, this)
+
+                setTimeout(() => {
+                    location.href = `${location.origin}/dashboard`
+                }, 3000)
+            } else {
+                showMessage(message,this)
+>>>>>>> 39aee3551220e544014c9c854e705a02ed6cb4bf
             }
         })
     })
