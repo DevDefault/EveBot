@@ -37,10 +37,16 @@ app.use(express.urlencoded({
 }))
 
 /* Routes */
-require("./app/signin")(app, io)
-require("./app/signout")(app)
-require("./app/dashboard")(app, io)
-require("./app/not-found")(app)
+const signin = require("./app/signin")
+const signout = require("./app/signout")
+const dashboard = require("./app/dashboard")
+const notFound = require("./app/not-found")
+
+/* Start Routes */
+signin(app, io)
+signout(app)
+dashboard(app, io)
+notFound(app)
 
 server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
