@@ -10,13 +10,7 @@
         <%- include("components/header") %> 
     </header>
 
-    <div class="container">
-        <div class="">
-            <input type="text" id="message" placeholder="message..." autocomplete="off">
-            
-            <p style="display: none;">Digitando...</p>
-        </div>
-    </div>
+    <div class="container"></div>
 
     <div class="d-flex justify-content-center">
         <footer class="position-fixed bottom-0 ">
@@ -29,19 +23,6 @@
     <script>
         $(function() {
             const socket = io();
-
-            $("#message").on("keyup", function(event) {
-                if (this.value != "") {
-                    socket.emit("is_typing", true)
-                    socket.on("is_typing", bool => {
-                        if(bool) {
-                            $("p").fadeIn()
-                        }
-                    })
-                }
-
-                $("p").fadeOut("slow")
-            })
         })
     </script>
 </body>
