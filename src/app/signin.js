@@ -33,9 +33,9 @@ module.exports = function(app, io) {
                 }
             })
 
-            socket.on('disconnect', () => {
-                console.log('user disconnected')
-            })
+            // socket.on('disconnect', () => {
+            //     console.log('user disconnected')
+            // })
         })
 
         res.render("signin")
