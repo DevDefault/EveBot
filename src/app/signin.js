@@ -25,6 +25,8 @@ module.exports = function(app, io) {
                         }
                         
                         socket.emit("signin_receive", message)
+                    }).catch((error) => {
+                        console.log(error)
                     })
                 } else {
                     message = "empty"
@@ -32,12 +34,10 @@ module.exports = function(app, io) {
                     socket.emit("signin_receive", message)
                 }
             })
-
-            // socket.on('disconnect', () => {
-            //     console.log('user disconnected')
-            // })
         })
 
-        res.render("signin")
+        res.render("signin", {
+            title: "Login"
+        })
     })
 }

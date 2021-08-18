@@ -10,7 +10,7 @@ const app = express()
 const port = 3000
 
 /* Whatsapp API */
-const wpp = require("venom-bot")
+// const wpp = require("venom-bot")
 
 /* Socket io */
 const server = require('http').createServer(app)
@@ -19,12 +19,12 @@ const io = require('socket.io')(server)
 /* Session */
 const session = require("express-session")
 
-/* Assets */
-app.use("/assets", express.static(__dirname + "/theme/assets"))
-
 /* Template Egine */
 app.set("view engine", "ejs")
 app.set("views", "theme/views")
+
+/* Assets */
+app.use("/assets", express.static(__dirname + "/theme/assets"))
 
 /* Session */
 app.use(session({
@@ -41,19 +41,19 @@ app.use(express.urlencoded({
 
 /* Routes */
 const signin = require("./src/app/signin")
-const signout = require("./src/app/signout")
 const dashboard = require("./src/app/dashboard")
+const signout = require("./src/app/signout")
 const notFound = require("./src/app/not-found")
 
-wpp.create().then((client) => {
+// wpp.create().then((client) => {
     /* Start Routes */
     signin(app, io)
+    dashboard(app, io)
     signout(app)
-    dashboard(app, io, client)
     notFound(app)
-}).catch((error) => {
-    console.log(error)
-})
+// }).catch((error) => {
+//     console.log(error)
+// })
 
 server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
